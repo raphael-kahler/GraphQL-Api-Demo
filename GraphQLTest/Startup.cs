@@ -33,7 +33,8 @@ namespace GraphQLTest
                 //o.ComplexityConfiguration = new ComplexityConfiguration { MaxDepth = 10, MaxComplexity = 10 };
                 o.EnableMetrics = true;
             })
-                .AddGraphTypes(ServiceLifetime.Scoped);
+                .AddGraphTypes(ServiceLifetime.Scoped)
+                .AddDataLoader();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

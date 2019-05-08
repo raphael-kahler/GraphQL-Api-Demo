@@ -50,22 +50,22 @@ namespace FoodAndMeals.Framework
             };
             var bread = new Meal(1, new MealName("Bread"), breadIngredients, new CookingInstructions("bake it"), new ServingSize(4));
 
-            var cookieIngredients = new List<MealIngredient>
-            {
-                new MealIngredient(new IngredientId("flour"), new Quantity(Unit.Grams, 500), "fluffed"),
-                new MealIngredient(new IngredientId("sugar"), new Quantity(Unit.Grams, 500))
-            };
-            var cookies = new Meal(1, new MealName("Cookies"), cookieIngredients, new CookingInstructions("bake 'em"), new ServingSize(4));
-
             var chiliIngredients = new List<MealIngredient>
             {
                 new MealIngredient(new IngredientId("chili peppers"), new Quantity(Unit.Kilograms, 10), "chopped"),
                 new MealIngredient(new IngredientId("beans"), new Quantity(Unit.Kilograms, 10), "rinsed and drained"),
                 new MealIngredient(new IngredientId("tomatoes"), new Quantity(Unit.Kilograms, 10), "chopped"),
-                new MealIngredient(new IngredientId("ground"), new Quantity(Unit.Kilograms, 10)),
+                new MealIngredient(new IngredientId("ground beef"), new Quantity(Unit.Kilograms, 10)),
                 new MealIngredient(new IngredientId("water"), new Quantity(Unit.Liters, 10))
             };
             var chili = new Meal(2, new MealName("Chili"), chiliIngredients, new CookingInstructions("cook it"), new ServingSize(60));
+
+            var cookieIngredients = new List<MealIngredient>
+            {
+                new MealIngredient(new IngredientId("flour"), new Quantity(Unit.Grams, 500), "fluffed"),
+                new MealIngredient(new IngredientId("sugar"), new Quantity(Unit.Grams, 500))
+            };
+            var cookies = new Meal(3, new MealName("Cookies"), cookieIngredients, new CookingInstructions("bake 'em"), new ServingSize(4));
 
             _meals.TryAdd(1, bread);
             _meals.TryAdd(2, chili);
