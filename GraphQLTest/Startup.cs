@@ -4,6 +4,7 @@ using GraphQL.Server;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Validation.Complexity;
 using GraphQLTest.GraphQL;
+using GraphQLTest.GraphQL.Types.Converters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,8 @@ namespace GraphQLTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IMealApplicationService, MealApplicationService>();
+            services.AddTransient<ModelConverter, ModelConverter>();
+
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddScoped<FoodAndMealSchema>();
 

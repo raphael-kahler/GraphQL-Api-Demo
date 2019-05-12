@@ -8,6 +8,7 @@ namespace GraphQLTest.GraphQL
         public FoodAndMealSchema(IDependencyResolver resolver) : base(resolver)
         {
             Query = resolver.Resolve<FoodAndMealQuery>();
+            Mutation = resolver.Resolve<FoodAndMealMutation>();
         }
     }
 }

@@ -39,8 +39,6 @@ namespace GraphQLTest.GraphQL
                     });
 
                     return loader.LoadAsync(context.GetArgument<int>("id"));
-
-                    //service.TryGetMeal(context.GetArgument<int>("id"), out var meal); return meal;
                 }
             );
 
