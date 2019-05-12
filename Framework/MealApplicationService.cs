@@ -1,5 +1,6 @@
 ﻿using FoodAndMeals.Domain;
 using FoodAndMeals.Domain.Values;
+using Functional;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -81,10 +82,10 @@ namespace FoodAndMeals.Framework
             return _meals.Values.Skip(offset).Take(count);
         }
 
-        public bool TryGetMeal(int id, out Meal meal)
+        public Option<Meal> TryGetMeal(int id)
         {
             Debug.WriteLine($"GET meal '{id}'");
-            return _meals.TryGetValue(id, out meal);
+            return _meals.TryGetValue(id, out var meal) ? meal : (Option<Meal>)None.Value;
         }
 
         public bool AddMeal(ref Meal meal)
@@ -126,10 +127,14 @@ namespace FoodAndMeals.Framework
             return _ingredients.Values.Skip(offset).Take(count);
         }
 
-        public bool TryGetIngredient(string name, out Ingredient ingredient)
+        public Option<Ingredient> TryGetIngredient(string name)
         {
             Debug.WriteLine($"GET ingredient '{name}'");
-            return _ingredients.TryGetValue(name, out ingredient);
+            if (_ingredients.TryGetValue(name, out var ingredient))
+            {
+                return ingredient;
+            }
+            return None.Value;
         }
 
 

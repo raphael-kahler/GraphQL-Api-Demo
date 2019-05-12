@@ -1,5 +1,6 @@
 ﻿using FoodAndMeals.Domain;
 using FoodAndMeals.Framework;
+using Functional;
 using GraphQL.DataLoader;
 using GraphQL.Types;
 using GraphQLTest.GraphQL.Types;
@@ -31,7 +32,8 @@ namespace GraphQLTest.GraphQL
                     var loader = dataLoaderAccessor.Context.GetOrAddBatchLoader<int, Meal>("GetMealsById", (ids, c) =>
                     {
                         IDictionary<int, Meal> result = ids
-                            .Select((id) => { service.TryGetMeal(id, out var meal); return meal; })
+                            .Select((id) => service.TryGetMeal(id))
+                            .Flatten()
                             .ToDictionary(m => m.Id);
                         return Task.FromResult(result);
                     });

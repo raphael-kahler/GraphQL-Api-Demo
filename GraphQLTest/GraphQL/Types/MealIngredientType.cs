@@ -1,6 +1,7 @@
 ﻿using FoodAndMeals.Domain;
 using FoodAndMeals.Domain.Values;
 using FoodAndMeals.Framework;
+using Functional;
 using GraphQL.DataLoader;
 using GraphQL.Types;
 using System.Collections.Generic;
@@ -27,10 +28,10 @@ namespace GraphQLTest.GraphQL.Types
                     {
                         // Method that does the batch lookup of ingredients. Since the persistence layer doesn't support
                         // querying multiple ingredients at once we have to query one ingredient at a time.
-                        IDictionary<string, Ingredient> result = 
-                            names
-                                .Select((name) => { service.TryGetIngredient(name, out var ingredient); return ingredient; })
-                                .ToDictionary(i => i.Id.Name);
+                        IDictionary<string, Ingredient> result = names
+                                .Select((name) => service.TryGetIngredient(name))
+                                .Flatten()
+                                .ToDictionary(m => m.Id.Name);
                         return Task.FromResult(result);
                     });
 

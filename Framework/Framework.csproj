@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Functional\Functional.csproj" />
   </ItemGroup>
 
 </Project>
