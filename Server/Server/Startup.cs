@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Server.GraphQL.Messaging;
 
 namespace GraphQLTest
 {
@@ -26,6 +27,7 @@ namespace GraphQLTest
         {
             services.AddSingleton<IMealApplicationService, MealApplicationService>();
             services.AddTransient<ModelConverter, ModelConverter>();
+            services.AddSingleton<MealMessageService>();
 
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddScoped<FoodAndMealSchema>();
@@ -37,7 +39,8 @@ namespace GraphQLTest
                 o.EnableMetrics = true;
             })
                 .AddGraphTypes(ServiceLifetime.Scoped)
-                .AddDataLoader();
+                .AddDataLoader()
+                .AddWebSockets();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +58,8 @@ namespace GraphQLTest
 
             app.UseHttpsRedirection();
 
+            app.UseWebSockets();
+            app.UseGraphQLWebSockets<FoodAndMealSchema>("/graphql");
             app.UseGraphQL<FoodAndMealSchema>();
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions());
         }

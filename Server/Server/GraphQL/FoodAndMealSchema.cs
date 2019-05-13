@@ -9,6 +9,7 @@ namespace GraphQLTest.GraphQL
         {
             Query = resolver.Resolve<FoodAndMealQuery>();
             Mutation = resolver.Resolve<FoodAndMealMutation>();
+            Subscription = resolver.Resolve<FoodAndMealSubscription>();
         }
     }
 }

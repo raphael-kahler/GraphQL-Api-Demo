@@ -4,12 +4,13 @@ using GraphQL.Types;
 using GraphQLTest.GraphQL.Types;
 using GraphQLTest.GraphQL.Types.Converters;
 using GraphQLTest.GraphQL.Types.Input;
+using Server.GraphQL.Messaging;
 
 namespace GraphQLTest.GraphQL
 {
     public class FoodAndMealMutation : ObjectGraphType
     {
-        public FoodAndMealMutation(IMealApplicationService service, ModelConverter converter)
+        public FoodAndMealMutation(IMealApplicationService service, MealMessageService messageService, ModelConverter converter)
         {
             Field<MealType>(
                 name: "createMeal",
@@ -19,6 +20,7 @@ namespace GraphQLTest.GraphQL
                     var mealInput = context.GetArgument<MealInput>("meal");
                     var meal = converter.ToDomainModel(mealInput);
                     service.AddMeal(ref meal);
+                    messageService.SendMealAddedMessage(meal);
                     return meal; 
                 }
             );
