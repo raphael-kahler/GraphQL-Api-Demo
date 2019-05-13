@@ -1,17 +1,16 @@
-﻿using GraphQL.Client;
+﻿using GraphQL.Client.Http;
 using GraphQL.Common.Request;
 using GraphQL.Common.Response;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Client
 {
     public class FoodAndMealClient
     {
-        private readonly GraphQLClient _graphQLClient;
+        private readonly GraphQLHttpClient _graphQLClient;
 
-        public FoodAndMealClient(GraphQLClient graphQLClient)
+        public FoodAndMealClient(GraphQLHttpClient graphQLClient)
         {
             _graphQLClient = graphQLClient;
         }
@@ -40,8 +39,14 @@ namespace Client
                 }",
                 Variables = new { id = id }
             };
-            var response = await _graphQLClient.PostAsync(query);
+            var response = await _graphQLClient.SendQueryAsync(query);
             PrintResponse(response);
+        }
+
+        public async Task Subscribe()
+        {
+            var result = await _graphQLClient.SendSubscribeAsync(@"subscription { mealAdded { id name } }");
+            result.OnReceive += PrintResponse;
         }
 
         private void PrintResponse(GraphQLResponse response)

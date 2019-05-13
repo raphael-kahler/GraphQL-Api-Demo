@@ -1,4 +1,4 @@
-﻿using GraphQL.Client;
+﻿using GraphQL.Client.Http;
 using System;
 using System.Threading.Tasks;
 
@@ -10,9 +10,19 @@ namespace Client
         {
             try
             {
-                var graphQLClient = new GraphQLClient("https://localhost:44364/graphql");
+                var graphQLClient = new GraphQLHttpClient("https://localhost:44364/graphql");
                 var client = new FoodAndMealClient(graphQLClient);
-                await client.GetMeal(1);
+
+                if (args != null && args[0].Equals("subscribe"))
+                {
+                    await client.Subscribe();
+                    Console.WriteLine("Subscribed to messages. Press any button to quit.");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    await client.GetMeal(1);
+                }
             }
             catch (Exception ex)
             {

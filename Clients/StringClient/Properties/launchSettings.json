@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StringClient": {
+      "commandName": "Project",
+      "commandLineArgs": "subscribe"
+    }
+  }
+}
