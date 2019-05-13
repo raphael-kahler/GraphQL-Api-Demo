@@ -1,0 +1,6 @@
+subscription {
+  mealAdded {
+    id
+    name
+  }
+}

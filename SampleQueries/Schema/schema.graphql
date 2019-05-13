@@ -1,0 +1,127 @@
+schema {
+  query: FoodAndMealQuery
+  mutation: FoodAndMealMutation
+  subscription: mealSubscription
+}
+
+# The `Date` scalar type
+ represents a year, month and day in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar Date
+
+# The `DateTime` scalar type
+ represents a date and time. `DateTime` expects
+# timestamps to be formatted in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar DateTime
+
+# The `DateTimeOffset` scalar type
+ represents a date, time and offset from UTC.
+# `DateTimeOffset` expects timestamps to be formatted in accordance with the
+# [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) standard.
+scalar DateTimeOffset
+
+scalar Decimal
+
+type FoodAndMealMutation {
+  createIngredient(ingredient: IngredientInput!): IngredientType
+  createMeal(meal: MealInput!): MealType
+}
+
+type FoodAndMealQuery {
+  # Get details about ingredients
+  ingredients(count: Int = 10, offset: Int = 0): [IngredientType]
+  meal(id: Int!): MealType
+  # Get details about meals
+  meals(count: Int = 10, offset: Int = 0): [MealType]
+}
+
+# The details of the ingredient that should be created.
+input IngredientInput {
+  # The name of the ingredient.
+  name: String!
+  # A description of the ingredient.
+  description: String!
+  # A url to an image of the ingredient.
+  imageUrl: String = null
+}
+
+type IngredientType {
+  # A description of the ingredient.
+  description: String!
+  # The image of the ingredient
+  image: String
+  # The name of the ingredient.
+  name: String!
+}
+
+type MealAddedMessageType {
+  # The ID of the meal.
+  id: Int
+  # The name of the meal.
+  name: String
+}
+
+# The details of the ingredient that should be created.
+input MealIngredientInput {
+  # The name of the ingredient.
+  ingredient: String!
+  # The unit of the ingredient.
+  unit: String!
+  # The quantity of the ingredient.
+  quantity: Float!
+  # How the ingredient should be prepared.
+  preparation: String = null
+}
+
+type MealIngredientType {
+  # The ingredient details.
+  ingredient: IngredientType
+  # How to prepare the ingredient.
+  preparation: String!
+  # The quantity of the ingredient.
+  quantity: QuantityType
+}
+
+# The details of the meal that should be created.
+input MealInput {
+  # The name of the meal.
+  name: String!
+  # The cooking instructions for the meal.
+  instructions: String = null
+  # How many people the meal feeds.
+  feedsNumPeople: Int = null
+  # The ingredients for the meal.
+  mealIngredients: [MealIngredientInput] = null
+}
+
+type mealSubscription {
+  mealAdded: MealAddedMessageType
+}
+
+type MealType {
+  # The ID of the meal.
+  id: Int
+  # The ingredients of the meal.
+  ingredients: [MealIngredientType]
+  # The cooking instructions for the meal.
+  instructions: String
+  # The name of the meal.
+  name: String
+  # The serving size of the meal.
+  servingSize: Int
+}
+
+# The `Milliseconds` scalar type
+ represents a period of time represented as the total number of milliseconds.
+scalar Milliseconds
+
+type QuantityType {
+  unit: String
+  value: Int
+}
+
+# The `Seconds` scalar type
+ represents a period of time represented as the total number of seconds.
+scalar Seconds
+

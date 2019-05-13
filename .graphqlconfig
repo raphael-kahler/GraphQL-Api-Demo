@@ -1,0 +1,10 @@
+{
+  "schemaPath": "SampleQueries\\Schema\\schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "default": {
+        "url": "https://localhost:44364/graphql"
+      }
+    }
+  }
+}
