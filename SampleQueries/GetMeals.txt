@@ -1,0 +1,21 @@
+# Write your query or mutation here
+query {
+  meals {
+    name
+    instructions
+    servingSize
+    ingredients {
+      ...ingredient
+    }
+  }
+}
+
+fragment ingredient on MealIngredientType {
+      ingredient {
+        name
+      }
+      quantity {
+        unit
+        value
+      }  
+}

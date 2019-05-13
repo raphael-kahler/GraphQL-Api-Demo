@@ -1,0 +1,10 @@
+mutation {
+  createIngredient(ingredient: {
+    name: "choco",
+    description: "bo"
+  }) {
+    name
+    description
+    image
+  }
+}

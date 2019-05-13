@@ -1,0 +1,23 @@
+mutation {
+  createMeal(meal: {
+    name: "test"
+    instructions: "shaka-laka"
+    feedsNumPeople: 10
+    mealIngredients: [
+      {
+        ingredient: "water"
+        unit: "ml"
+        quantity: 100
+      },
+      {
+        ingredient: "tomatoes"
+        unit: "grams"
+        quantity: 200
+      }
+    ]
+  }) {
+    id
+    name
+    instructions
+  }
+}
