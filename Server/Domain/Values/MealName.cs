@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Functional;
 
 namespace FoodAndMeals.Domain.Values
 {
@@ -6,14 +6,23 @@ namespace FoodAndMeals.Domain.Values
     {
         public string Name { get; }
 
-        public MealName(string name)
+        private MealName(string name) => Name = name;
+
+        public static Result<MealName> CreateFrom(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return new ErrorMessage("Meal name cannot be null or empty.");
+            }
+
+            name = name.Trim();
 
             if (name.Length > 100)
             {
-                throw new ArgumentException("Meal name can be at most 100 characters long.", nameof(name));
+                return new ErrorMessage("Meal name can be at most 100 characters long.");
             }
+
+            return new MealName(name);
         }
     }
 }

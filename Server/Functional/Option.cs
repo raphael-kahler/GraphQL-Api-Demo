@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Functional
+﻿namespace Functional
 {
     public class Option<T>
     {

@@ -22,26 +22,6 @@ namespace FoodAndMeals.Domain
             Ingredients = ingredients;
         }
 
-        public void ChangeName(string name)
-        {
-            Name = new MealName(name);
-        }
-
-        public void ChangeInstructions(string instructions)
-        {
-            Instructions = new CookingInstructions(instructions);
-        }
-
-        public void SetIngredients(IList<MealIngredient> ingredients)
-        {
-            Ingredients = ingredients ?? throw new System.ArgumentNullException(nameof(ingredients));
-        }
-
-        public void ChangeServingSize(int servingSize)
-        {
-            ServingSize = new ServingSize(servingSize);
-        }
-
         public void ScaleTo(ServingSize newServingSize)
         {
             var scaleRatio = newServingSize.SizeRatioVersus(ServingSize);

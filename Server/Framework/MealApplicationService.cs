@@ -23,8 +23,8 @@ namespace FoodAndMeals.Framework
             _meals = new ConcurrentDictionary<int, Meal>();
             _ingredients = new ConcurrentDictionary<string, Ingredient>();
 
-            var flour = new Ingredient(new IngredientId("flour"), "bake it", new ImageUri("https://upload.wikimedia.org/wikipedia/commons/6/64/All-Purpose_Flour_%284107895947%29.jpg"));
-            var water = new Ingredient(new IngredientId("water"), "drink it", new ImageUri("https://upload.wikimedia.org/wikipedia/commons/2/24/Cat_drinking_water_%28ubt%29.jpeg"));
+            var flour = new Ingredient(new IngredientId("flour"), "bake it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/6/64/All-Purpose_Flour_%284107895947%29.jpg").Reduce(whenError: null));
+            var water = new Ingredient(new IngredientId("water"), "drink it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/2/24/Cat_drinking_water_%28ubt%29.jpeg").Reduce(whenError: null));
             var sugar = new Ingredient(new IngredientId("sugar"), "eat it");
             var yeast = new Ingredient(new IngredientId("yeast"), "bake it");
             var chiliPeppers = new Ingredient(new IngredientId("chili peppers"), "cook it");
@@ -49,7 +49,7 @@ namespace FoodAndMeals.Framework
                 new MealIngredient(new IngredientId("water"), new Quantity(Unit.Milliliters, 100)),
                 new MealIngredient(new IngredientId("yeast"), new Quantity(Unit.Grams, 10))
             };
-            var bread = new Meal(1, new MealName("Bread"), breadIngredients, new CookingInstructions("bake it"), new ServingSize(4));
+            var bread = new Meal(1, MealName.CreateFrom("Bread").Reduce(whenError: null), breadIngredients, new CookingInstructions("bake it"), new ServingSize(4));
 
             var chiliIngredients = new List<MealIngredient>
             {
@@ -59,14 +59,14 @@ namespace FoodAndMeals.Framework
                 new MealIngredient(new IngredientId("ground beef"), new Quantity(Unit.Kilograms, 10)),
                 new MealIngredient(new IngredientId("water"), new Quantity(Unit.Liters, 10))
             };
-            var chili = new Meal(2, new MealName("Chili"), chiliIngredients, new CookingInstructions("cook it"), new ServingSize(60));
+            var chili = new Meal(2, MealName.CreateFrom("Chili").Reduce(whenError: null), chiliIngredients, new CookingInstructions("cook it"), new ServingSize(60));
 
             var cookieIngredients = new List<MealIngredient>
             {
                 new MealIngredient(new IngredientId("flour"), new Quantity(Unit.Grams, 500), "fluffed"),
                 new MealIngredient(new IngredientId("sugar"), new Quantity(Unit.Grams, 500))
             };
-            var cookies = new Meal(3, new MealName("Cookies"), cookieIngredients, new CookingInstructions("bake 'em"), new ServingSize(4));
+            var cookies = new Meal(3, MealName.CreateFrom("Cookies").Reduce(whenError: null), cookieIngredients, new CookingInstructions("bake 'em"), new ServingSize(4));
 
             _meals.TryAdd(1, bread);
             _meals.TryAdd(2, chili);
@@ -88,7 +88,7 @@ namespace FoodAndMeals.Framework
             return _meals.TryGetValue(id, out var meal) ? meal : (Option<Meal>)None.Value;
         }
 
-        public bool AddMeal(ref Meal meal)
+        public Result<Meal> TryAddMeal(Meal meal)
         {
             lock (_meals)
             {
@@ -100,9 +100,9 @@ namespace FoodAndMeals.Framework
                     Interlocked.Increment(ref _numMeals);
                     Interlocked.Increment(ref _mealIdCounter);
                     meal = mealToAdd;
-                    return true;
+                    return meal;
                 }
-                return false;
+                return new ErrorMessage($"Meal with id {nextId} already exists");
             }
         }
 
@@ -138,15 +138,15 @@ namespace FoodAndMeals.Framework
         }
 
 
-        public bool AddIngredient(Ingredient ingredient)
+        public Result<Ingredient> TryAddIngredient(Ingredient ingredient)
         {
             var added = _ingredients.TryAdd(ingredient.Id.Name, ingredient);
             if (added)
             {
                 Interlocked.Increment(ref _numIngredients);
-                return true;
+                return ingredient;
             }
-            return false;
+            return new ErrorMessage($"Ingredient with name \"{ingredient.Id.Name}\" already exists");
         }
 
         public Ingredient SaveIngredient(Ingredient ingredient)

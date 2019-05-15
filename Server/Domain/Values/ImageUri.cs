@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Functional;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,11 +11,13 @@ namespace FoodAndMeals.Domain.Values
 
         public Uri Uri { get; }
 
-        public ImageUri(string uri)
+        private ImageUri(Uri uri) => Uri = uri;
+
+        public static Result<ImageUri> CreateFrom(string uri)
         {
             if (null == uri)
             {
-                throw new ArgumentNullException(nameof(uri));
+                return new ErrorMessage("uri cannot be null");
             }
 
             Uri parsedUri;
@@ -22,18 +25,18 @@ namespace FoodAndMeals.Domain.Values
             {
                 parsedUri = new Uri(uri);
             }
-            catch(Exception ex)
+            catch
             {
-                throw new ArgumentException($"The value \"{uri}\" is not a valid Uri.", nameof(uri), ex);
+                return new ErrorMessage($"The value \"{uri}\" is not a valid Uri.");
             }
 
             var fileExtension = Path.GetExtension(parsedUri.LocalPath);
             if (!imageFileExtensions.Contains(fileExtension))
             {
-                throw new ArgumentException($"Uri \"{uri}\" is not regonized as a link to a file.", nameof(uri));
+                return new ErrorMessage($"Uri \"{uri}\" is not regonized as a link to a file.");
             }
 
-            Uri = parsedUri;
+            return new ImageUri(parsedUri);
         }
     }
 }

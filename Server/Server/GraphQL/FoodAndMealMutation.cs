@@ -1,4 +1,5 @@
 ﻿using FoodAndMeals.Framework;
+using Functional;
 using GraphQL;
 using GraphQL.Types;
 using GraphQLTest.GraphQL.Types;
@@ -18,10 +19,14 @@ namespace GraphQLTest.GraphQL
                 resolve: context =>
                 {
                     var mealInput = context.GetArgument<MealInput>("meal");
-                    var meal = converter.ToDomainModel(mealInput);
-                    service.AddMeal(ref meal);
-                    messageService.SendMealAddedMessage(meal);
-                    return meal; 
+                    return converter.ToDomainModel(mealInput)
+                        .Map(meal => service.TryAddMeal(meal))
+                        .OnSuccess(meal => messageService.SendMealAddedMessage(meal))
+                        .Reduce(e =>
+                        {
+                            context.Errors.Add(new ExecutionError(e));
+                            return null;
+                        });
                 }
             );
 
@@ -31,13 +36,13 @@ namespace GraphQLTest.GraphQL
                 resolve: context =>
                 {
                     var ingredientInput = context.GetArgument<IngredientInput>("ingredient");
-                    var ingredient = converter.ToDomainModel(ingredientInput);
-                    if (service.AddIngredient(ingredient))
-                    {
-                        return ingredient;
-                    }
-                    context.Errors.Add(new ExecutionError($"Ingredient with name \"{ingredientInput.Name}\" already exists"));
-                    return null;
+                    return converter.ToDomainModel(ingredientInput)
+                        .Map(ingredient => service.TryAddIngredient(ingredient))
+                        .Reduce(e =>
+                        {
+                            context.Errors.Add(new ExecutionError(e));
+                            return null;
+                        });
                 }
             );
         }

@@ -2,22 +2,28 @@
 using System.Collections.Generic;
 using FoodAndMeals.Domain;
 using FoodAndMeals.Domain.Values;
+using Functional;
 using GraphQLTest.GraphQL.Types.Input;
 
 namespace GraphQLTest.GraphQL.Types.Converters
 {
     public class ModelConverter
     {
-        public Meal ToDomainModel(MealInput mealInput)
+        public Result<Meal> ToDomainModel(MealInput mealInput)
         {
-            return new Meal
-            (
-                id: 0,
-                mealName: new MealName(mealInput.Name),
-                ingredients: ToModel(mealInput.MealIngredients),
-                servingSize: new ServingSize(mealInput.FeedsNumPeople),
-                instructions: new CookingInstructions(mealInput.Instructions)
-            );
+            return MealName
+                .CreateFrom(mealInput.Name)
+                .Map(mealName =>
+                {
+                    return new Success<Meal>(new Meal
+                    (
+                        id: 0,
+                        mealName: mealName,
+                        ingredients: ToModel(mealInput.MealIngredients),
+                        servingSize: new ServingSize(mealInput.FeedsNumPeople),
+                        instructions: new CookingInstructions(mealInput.Instructions)
+                    ));
+                });
         }
 
         private IList<MealIngredient> ToModel(IEnumerable<MealIngredientInput> mealIngredients)
@@ -38,14 +44,16 @@ namespace GraphQLTest.GraphQL.Types.Converters
             return models;
         }
 
-        public Ingredient ToDomainModel(IngredientInput ingredientInput)
+        public Result<Ingredient> ToDomainModel(IngredientInput ingredientInput)
         {
-            var uri = null != ingredientInput.ImageUrl ? new ImageUri(ingredientInput.ImageUrl) : null;
-            return new Ingredient
-            (
-                id: new IngredientId(ingredientInput.Name),
-                description: ingredientInput.Description,
-                image: uri
+            Result<ImageUri> uriResult = null != ingredientInput.ImageUrl ? ImageUri.CreateFrom(ingredientInput.ImageUrl) : new Success<ImageUri>(null);
+
+            return uriResult.Map<ImageUri, Ingredient>(uri =>
+                new Ingredient(
+                    id: new IngredientId(ingredientInput.Name),
+                    description: ingredientInput.Description,
+                    image: uri
+                )
             );
         }
     }

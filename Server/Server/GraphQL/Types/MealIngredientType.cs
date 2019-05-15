@@ -14,7 +14,11 @@ namespace GraphQLTest.GraphQL.Types
     {
         public MealIngredientType(IMealApplicationService service, IDataLoaderContextAccessor dataLoaderAccessor)
         {
-            Field(mi => mi.Preparation).Description("How to prepare the ingredient.");
+            Field<StringGraphType>(
+                name: "Preparation",
+                description: "How to prepare the ingredient.",
+                resolve: context => context.Source.Preparation
+            );
 
             Field<IngredientType>(
                 name: "Ingredient",
