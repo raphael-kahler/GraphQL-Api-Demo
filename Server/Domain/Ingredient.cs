@@ -1,4 +1,5 @@
 ﻿using FoodAndMeals.Domain.Values;
+using Functional;
 using System;
 
 namespace FoodAndMeals.Domain
@@ -7,18 +8,19 @@ namespace FoodAndMeals.Domain
     {
         public string Name { get; }
 
-        public IngredientId(string name)
+        private IngredientId(string name) => Name = name;
+
+        public static Result<IngredientId> CreateFrom(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new ArgumentNullException(nameof(name));
+                return new ErrorMessage("Ingredient ID name cannot be null or empty.");
             }
             if (name.Length > 200)
             {
-                throw new ArgumentException("Name can't be longer than 200 characters", nameof(name));
+                return new ErrorMessage("Ingredient ID name can't be longer than 200 characters");
             }
-
-            Name = name;
+            return new IngredientId(name);
         }
     }
 

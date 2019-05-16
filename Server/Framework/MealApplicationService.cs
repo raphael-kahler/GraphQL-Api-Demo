@@ -23,14 +23,14 @@ namespace FoodAndMeals.Framework
             _meals = new ConcurrentDictionary<int, Meal>();
             _ingredients = new ConcurrentDictionary<string, Ingredient>();
 
-            var flour = new Ingredient(new IngredientId("flour"), "bake it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/6/64/All-Purpose_Flour_%284107895947%29.jpg").Reduce(whenError: null));
-            var water = new Ingredient(new IngredientId("water"), "drink it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/2/24/Cat_drinking_water_%28ubt%29.jpeg").Reduce(whenError: null));
-            var sugar = new Ingredient(new IngredientId("sugar"), "eat it");
-            var yeast = new Ingredient(new IngredientId("yeast"), "bake it");
-            var chiliPeppers = new Ingredient(new IngredientId("chili peppers"), "cook it");
-            var beans = new Ingredient(new IngredientId("beans"), "cook it");
-            var tomatoes = new Ingredient(new IngredientId("tomatoes"), "cook it");
-            var groundBeef = new Ingredient(new IngredientId("ground beef"), "85% lean");
+            var flour = new Ingredient(IngredientId.CreateFrom("flour").Reduce(whenError: null), "bake it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/6/64/All-Purpose_Flour_%284107895947%29.jpg").Reduce(whenError: null));
+            var water = new Ingredient(IngredientId.CreateFrom("water").Reduce(whenError: null), "drink it", ImageUri.CreateFrom("https://upload.wikimedia.org/wikipedia/commons/2/24/Cat_drinking_water_%28ubt%29.jpeg").Reduce(whenError: null));
+            var sugar = new Ingredient(IngredientId.CreateFrom("sugar").Reduce(whenError: null), "eat it");
+            var yeast = new Ingredient(IngredientId.CreateFrom("yeast").Reduce(whenError: null), "bake it");
+            var chiliPeppers = new Ingredient(IngredientId.CreateFrom("chili peppers").Reduce(whenError: null), "cook it");
+            var beans = new Ingredient(IngredientId.CreateFrom("beans").Reduce(whenError: null), "cook it");
+            var tomatoes = new Ingredient(IngredientId.CreateFrom("tomatoes").Reduce(whenError: null), "cook it");
+            var groundBeef = new Ingredient(IngredientId.CreateFrom("ground beef").Reduce(whenError: null), "85% lean");
 
             _ingredients.TryAdd("flour", flour);
             _ingredients.TryAdd("water", water);
@@ -45,26 +45,26 @@ namespace FoodAndMeals.Framework
 
             var breadIngredients = new List<MealIngredient>
             {
-                new MealIngredient(new IngredientId("flour"), new Quantity(Unit.Grams, 500), "fluffed"),
-                new MealIngredient(new IngredientId("water"), new Quantity(Unit.Milliliters, 100)),
-                new MealIngredient(new IngredientId("yeast"), new Quantity(Unit.Grams, 10))
+                new MealIngredient(IngredientId.CreateFrom("flour").Reduce(whenError: null), new Quantity(Unit.Grams, 500), "fluffed"),
+                new MealIngredient(IngredientId.CreateFrom("water").Reduce(whenError: null), new Quantity(Unit.Milliliters, 100)),
+                new MealIngredient(IngredientId.CreateFrom("yeast").Reduce(whenError: null), new Quantity(Unit.Grams, 10))
             };
             var bread = new Meal(1, MealName.CreateFrom("Bread").Reduce(whenError: null), breadIngredients, new CookingInstructions("bake it"), new ServingSize(4));
 
             var chiliIngredients = new List<MealIngredient>
             {
-                new MealIngredient(new IngredientId("chili peppers"), new Quantity(Unit.Kilograms, 10), "chopped"),
-                new MealIngredient(new IngredientId("beans"), new Quantity(Unit.Kilograms, 10), "rinsed and drained"),
-                new MealIngredient(new IngredientId("tomatoes"), new Quantity(Unit.Kilograms, 10), "chopped"),
-                new MealIngredient(new IngredientId("ground beef"), new Quantity(Unit.Kilograms, 10)),
-                new MealIngredient(new IngredientId("water"), new Quantity(Unit.Liters, 10))
+                new MealIngredient(IngredientId.CreateFrom("chili peppers").Reduce(whenError: null), new Quantity(Unit.Kilograms, 10), "chopped"),
+                new MealIngredient(IngredientId.CreateFrom("beans").Reduce(whenError: null), new Quantity(Unit.Kilograms, 10), "rinsed and drained"),
+                new MealIngredient(IngredientId.CreateFrom("tomatoes").Reduce(whenError: null), new Quantity(Unit.Kilograms, 10), "chopped"),
+                new MealIngredient(IngredientId.CreateFrom("ground beef").Reduce(whenError: null), new Quantity(Unit.Kilograms, 10)),
+                new MealIngredient(IngredientId.CreateFrom("water").Reduce(whenError: null), new Quantity(Unit.Liters, 10))
             };
             var chili = new Meal(2, MealName.CreateFrom("Chili").Reduce(whenError: null), chiliIngredients, new CookingInstructions("cook it"), new ServingSize(60));
 
             var cookieIngredients = new List<MealIngredient>
             {
-                new MealIngredient(new IngredientId("flour"), new Quantity(Unit.Grams, 500), "fluffed"),
-                new MealIngredient(new IngredientId("sugar"), new Quantity(Unit.Grams, 500))
+                new MealIngredient(IngredientId.CreateFrom("flour").Reduce(whenError: null), new Quantity(Unit.Grams, 500), "fluffed"),
+                new MealIngredient(IngredientId.CreateFrom("sugar").Reduce(whenError: null), new Quantity(Unit.Grams, 500))
             };
             var cookies = new Meal(3, MealName.CreateFrom("Cookies").Reduce(whenError: null), cookieIngredients, new CookingInstructions("bake 'em"), new ServingSize(4));
 

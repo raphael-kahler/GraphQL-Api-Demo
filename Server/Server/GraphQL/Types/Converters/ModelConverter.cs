@@ -32,13 +32,11 @@ namespace GraphQLTest.GraphQL.Types.Converters
 
             foreach (var mealIngredient in mealIngredients)
             {
-                models.Add(new MealIngredient
-                    (
-                        ingredient: new IngredientId(mealIngredient.Ingredient),
-                        quantity: new Quantity(Unit.Parse(mealIngredient.Unit), mealIngredient.Quantity),
-                        preparation: mealIngredient.Preparation
-                    )
-                );
+                var quantity = new Quantity(Unit.Parse(mealIngredient.Unit), mealIngredient.Quantity);
+                IngredientId
+                    .CreateFrom(mealIngredient.Ingredient)
+                    .Map<IngredientId, MealIngredient>(ingredientId => new MealIngredient(ingredientId, quantity, mealIngredient.Preparation))
+                    .OnSuccess(meal => models.Add(meal));
             }
 
             return models;
@@ -48,13 +46,14 @@ namespace GraphQLTest.GraphQL.Types.Converters
         {
             Result<ImageUri> uriResult = null != ingredientInput.ImageUrl ? ImageUri.CreateFrom(ingredientInput.ImageUrl) : new Success<ImageUri>(null);
 
-            return uriResult.Map<ImageUri, Ingredient>(uri =>
-                new Ingredient(
-                    id: new IngredientId(ingredientInput.Name),
-                    description: ingredientInput.Description,
-                    image: uri
-                )
-            );
+            return uriResult
+                .And(IngredientId.CreateFrom(ingredientInput.Name))
+                .Map<(ImageUri, IngredientId), Ingredient>(((ImageUri uri, IngredientId ingredientId) parts) =>
+                    new Ingredient(
+                        id: parts.ingredientId,
+                        description: ingredientInput.Description,
+                        image: parts.uri
+                    ));
         }
     }
 }
